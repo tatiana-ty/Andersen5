@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import com.andersenlab.andersen.Person
 import com.andersenlab.andersen.R
 
-class ContactDetailsFragment : Fragment() {
+class ContactDetailsFragment(val fragment: ContactsListFragment) : Fragment() {
 
     private lateinit var person: Person
     private lateinit var buttonEdit: Button
@@ -69,8 +69,8 @@ class ContactDetailsFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(person: Person, index: Int) =
-            ContactDetailsFragment().apply {
+        fun newInstance(person: Person, index: Int, fragment: ContactsListFragment) =
+            ContactDetailsFragment(fragment).apply {
                 this.person = person
                 this.index = index
             }

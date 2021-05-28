@@ -84,13 +84,13 @@ class ContactsListFragment : Fragment() {
         if (isLandscape) {
             listView.setItemChecked(currentPosition, true)
             requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.details, ContactDetailsFragment.newInstance(data[index], index))
+                    .replace(R.id.details, ContactDetailsFragment.newInstance(data[index], index, this))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .addToBackStack(null)
                     .commit()
         } else {
             requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.contacts, ContactDetailsFragment.newInstance(data[index], index))
+                    .replace(R.id.contacts, ContactDetailsFragment.newInstance(data[index], index, this))
                     .addToBackStack("")
                     .commit()
         }
