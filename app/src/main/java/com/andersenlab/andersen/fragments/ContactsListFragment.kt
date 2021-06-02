@@ -1,12 +1,10 @@
 package com.andersenlab.andersen.fragments
 
 import android.content.res.Configuration
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
@@ -24,7 +22,7 @@ class ContactsListFragment : Fragment() {
 
     private var currentPosition = 0
     private var isLandscape: Boolean = false
-    private var names= arrayListOf<String>()
+    private var names = arrayListOf<String>()
     private lateinit var listView: ListView
 
     companion object {
@@ -82,7 +80,7 @@ class ContactsListFragment : Fragment() {
         }
     }
 
-    fun showDetails(index: Int) {
+    private fun showDetails(index: Int) {
         if (isLandscape) {
             listView.setItemChecked(currentPosition, true)
             requireActivity().supportFragmentManager.beginTransaction()

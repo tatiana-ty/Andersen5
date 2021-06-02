@@ -1,6 +1,5 @@
 package com.andersenlab.andersen.fragments
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import androidx.fragment.app.Fragment
 import com.andersenlab.andersen.Person
 import com.andersenlab.andersen.R
 
-class ContactDetailsFragment() : Fragment() {
+class ContactDetailsFragment : Fragment() {
 
     private lateinit var person: Person
     private lateinit var buttonEdit: Button
@@ -78,24 +77,26 @@ class ContactDetailsFragment() : Fragment() {
 
     companion object {
         fun newInstance(person: Person, index: Int) =
-            ContactDetailsFragment().apply {
-                this.person = person
-                this.index = index
-            }
+                ContactDetailsFragment().apply {
+                    this.person = person
+                    this.index = index
+                }
     }
 
     override fun onDetach() {
         super.onDetach()
         requireActivity().findViewById<FrameLayout>(R.id.contacts).visibility = VISIBLE
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable("person", person)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
-            this.person = savedInstanceState.getParcelable<Person>("person")!! as Person
+            this.person = savedInstanceState.getParcelable("person")!!
         }
     }
 }
