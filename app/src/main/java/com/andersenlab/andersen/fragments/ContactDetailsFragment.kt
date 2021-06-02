@@ -1,6 +1,6 @@
 package com.andersenlab.andersen.fragments
 
-import android.opengl.Visibility
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +8,13 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.andersenlab.andersen.Person
 import com.andersenlab.andersen.R
 
-class ContactDetailsFragment(val fragment: ContactsListFragment) : Fragment() {
+class ContactDetailsFragment() : Fragment() {
 
     private lateinit var person: Person
     private lateinit var buttonEdit: Button
@@ -65,17 +66,28 @@ class ContactDetailsFragment(val fragment: ContactsListFragment) : Fragment() {
             phoneTextView.text = newPhone
             ContactsListFragment.data[index].name = newName
             ContactsListFragment.data[index].phone = newPhone
+            val fragment = requireActivity()
+                    .supportFragmentManager
+                    .findFragmentByTag("FirstFragment")
+            requireActivity().supportFragmentManager.beginTransaction()
+                    .detach(fragment!!)
+                    .attach(fragment)
+                    .commit()
         }
     }
 
     companion object {
-        fun newInstance(person: Person, index: Int, fragment: ContactsListFragment) =
-            ContactDetailsFragment(fragment).apply {
+        fun newInstance(person: Person, index: Int) =
+            ContactDetailsFragment().apply {
                 this.person = person
                 this.index = index
             }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        requireActivity().findViewById<FrameLayout>(R.id.contacts).visibility = VISIBLE
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable("person", person)

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.contacts, ContactsListFragment.newInstance())
+                    .replace(R.id.contacts, ContactsListFragment.newInstance(), "FirstFragment")
                     .commitNow()
         }
     }

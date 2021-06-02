@@ -1,12 +1,15 @@
 package com.andersenlab.andersen.fragments
 
 import android.content.res.Configuration
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -49,6 +52,7 @@ class ContactsListFragment : Fragment() {
                 data.add(person)
             }
         }
+        names = arrayListOf()
         for (i in 0 until data.size) {
             names.add(data[i].name)
         }
@@ -59,9 +63,11 @@ class ContactsListFragment : Fragment() {
                 names
         )
         listView.adapter = adapter
-        listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
-            currentPosition = position
-            showDetails(currentPosition)
+        listView.onItemClickListener = OnItemClickListener { _, view, position, _ ->
+            if (currentPosition != position) {
+                currentPosition = position
+                showDetails(position)
+            }
         }
     }
 
@@ -70,10 +76,6 @@ class ContactsListFragment : Fragment() {
 
         isLandscape = (resources.configuration.orientation
                 == Configuration.ORIENTATION_LANDSCAPE)
-
-        if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getInt("currentPosition", 0)
-        }
         if (isLandscape) {
             listView.choiceMode = ListView.CHOICE_MODE_SINGLE
             showDetails(currentPosition)
@@ -84,22 +86,21 @@ class ContactsListFragment : Fragment() {
         if (isLandscape) {
             listView.setItemChecked(currentPosition, true)
             requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.details, ContactDetailsFragment.newInstance(data[index], index, this))
+                    .replace(R.id.details, ContactDetailsFragment.newInstance(data[index], index))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack(null)
                     .commit()
         } else {
+            requireActivity().findViewById<FrameLayout>(R.id.contacts).visibility = View.GONE
             requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.contacts, ContactDetailsFragment.newInstance(data[index], index, this))
-                    .addToBackStack("")
+                    .replace(R.id.details, ContactDetailsFragment.newInstance(data[index], index))
+                    .addToBackStack(null)
                     .commit()
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("currentContact", currentPosition)
+        outState.putInt("currentPosition", currentPosition)
         outState.putParcelableArrayList("data", ArrayList(data))
-       // outState.putStringArrayList("names", ArrayList(names))
         super.onSaveInstanceState(outState)
     }
 
@@ -107,7 +108,6 @@ class ContactsListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
             data = savedInstanceState.getParcelableArrayList<Person>("data") as ArrayList<Person>
-            //names = savedInstanceState.getStringArrayList("names") as ArrayList<String>
             currentPosition = savedInstanceState.getInt("currentPosition")
         }
     }
